@@ -1,16 +1,18 @@
-const fs = require('fs');
-const notes = require('../db/db.json');
-const {createNote} = require('../db/create');
+
+const notes = require('../db/store');
 const router = require('express').Router();
 
-router.get('/notes', (req, res) => {
-    let results = notes;
-    res.json(results.db);
+router.get('/notes', ( req, res ) => {
+    notes
+        .getNotes()
+        .then((notes) => {
+            return res.json(notes);
+        })
 });
 
-router.post('/notes', (req, res) => {
-    let newNote = createNote(req.body, notes);
-    res.json(newNote);
-});
-
+router.post('/notes', ( req, res) => {
+    notes
+        .createNote(req.body)
+        .then((note) => res.json(note))
+})
 module.exports = router;
